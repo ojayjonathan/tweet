@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> Home</title>
+    {%load static%}
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+       <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <script src="https://kit.fontawesome.com/e785fe72b2.js" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+       <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+    </head>
+
+
+<body>
+<div class="row">
+    <div class="col-md-3">
+
+            <i class="fab fa-twitter icon"></i>
+
+        <div>
+           <a href=""> <i class="fas fa-home icon"></i>
+            <strong>Home</strong></a>
+        </div>
+        <div>
+            <i class="far fa-bell icon"></i>
+            <a href="#"><strong>Notification</strong></a>
+        </div>
+        <div>
+            <i class="fas fa-hashtag icon" ></i>
+            <a href="#"><strong>Explore</strong></a>
+        </div>
+        <div>
+            <i class="far fa-envelope icon"></i>
+            <a href="#"><strong>Messages</strong></a>
+        </div>
+        <div>
+            <i class="far fa-bookmark icon"></i>
+            <a href="#"><strong>Bookmarks</strong></a>
+        </div>
+        <div>
+            <i class="fas fa-list-ul icon"></i>
+            <a href="#"><strong>List</strong></a>
+        </div>
+        <a href="{% url 'user_profile:profile' user.username%} ">
+        <div>
+            {% if user.profile_pic%}
+            <i><img class="icon profile" src="{{user.profile_pic.url}}" alt=""></i>
+            <strong>profile</strong>
+            {% else%}
+            <i class="fas fa-user-alt icon"></i><strong>Profile</strong>
+            {%endif%}
+
+        </div>
+            </a>
+        <div >
+           <i class="fas fa-ellipsis-h icon more"></i>
+            <a href="#"><strong>More</strong></a>
+        </div>
+        <br>
+        <div>
+            <a href="#" class="btn btn-primary btn-lg" style="border-radius:30px; width:150px;">Tweet</a>
+        </div>
+    </div>
+    <hr>
+    <div class="col-md-6 md">
+        {%block content%}
+        {%endblock%}
+    </div>
+    <div class="col-md-3 ">
+        <h1>Trend for you</h1>
+    </div>
+</div>
+<div class="hidden">
+    <div class="form">
+    <button style="width:100%; background-color:white; color:#9ed1f8; text-align:left;border:none;">X</button>
+    <hr>
+    <form action="{%url 'tweet:post' user.username %}" enctype="multipart/form-data" method="post">
+        {%csrf_token%}
+        <div class="form-group">
+    <span class="glyphicon glypicon-user"></span>
+    <span class="glyphicon glyphicon-print"></span>
+    <label>{{form.text}}</label>
+    <textarea  name="text" id="" cols="20" rows="5" placeholder="What's happening"></textarea>
+    <br>
+    <br>
+    <div class="file">
+        <input type="file" name="tweet_file" placeholder="upload file">
+        <button class="btn-sub" value="post" type="submit" style="border-radius:30px ;position:absolute; bottom:10px; right:10px; color:white; background-color:#9ed1f8;" >Tweet</button>
+    </div>
+
+</div>
+
+    </form>
+</div>
+</div>
+<script src="{% static 'script.js'%}"></script>
+</body>
+</html>

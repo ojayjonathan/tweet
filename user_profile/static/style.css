@@ -1,0 +1,110 @@
+.row{
+margin: 10px 0 0 10px;}
+.menu div {
+margin:10px 10px 10px 10pk ;
+display:flex;
+justify-content:space-around;
+}
+
+.col-md-3 a{
+color:black;}
+.col-md-3 div{
+
+}
+
+
+.col-md-3 div:hover{
+border:1px solid #D7EFFF;
+border-radius:30px;
+color:rgb(133, 234, 252) !important;
+background-color:#E6FFFA;
+opacity:1;
+width:150px;
+}
+
+.col-md-3 div a:hover{
+text-decoration:none;
+}
+.fa-twitter{
+color:rgba(29,161,242,1.00);
+width:50px;
+height:30px;
+}
+
+.fa-home{
+color:rgba(29,161,242,1.00);
+}
+
+.icon{
+padding-top:10px;
+font-size:48px;
+}
+.more{
+border:2px solid rgb(77, 75, 75);
+border-radius:80%;
+
+}
+
+.profile {
+width:48px;
+height:48px;
+border-radius:50% ;}
+
+.md{
+border-left:2px solid #c1c1d1 ;
+border-right:2px solid #c1c1d1;
+overflow:scroll;
+padding:0 0 0 0;
+}
+
+.profile_image{
+background-color:rgb(193, 193, 209);
+height:200px;
+width :100%
+}
+
+.card-1 img {
+position:absolute;
+top:180px;
+left:5px;
+width:200px;
+height:150px;
+border-radius:50%;
+border:5px solid white;
+z-index:9;}
+
+.card-1 i{
+font-size:8em;
+position:absolute;
+top:220px;
+z-index:9;
+border-radius:50%;
+border:5px solid rgb(248, 247, 247);
+padding:5px 5px 5px 5px;
+background-color:white;
+}
+
+.card-1 a{
+color:rgba(29,161,242,1.00);
+border:1px solid #96DBFF;
+position:absolute;
+top: 300px;
+right:2%;
+border-radius:30px
+}
+.presentation {
+display:flex;
+justify-content:space-around;
+
+}
+.presentation a{
+color:black;
+height:30px;
+padding-bottom:3px;
+}
+
+.presentation a:hover{
+border-bottom:2px solid rgba(29,161,242,1.00);
+color:#96DBFF;
+text-decoration:none;
+}

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> {{user.username}}</title>
+    {%load static%}
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+       <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <script src="https://kit.fontawesome.com/e785fe72b2.js" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+
+
+       <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+    </head>
+
+
+<body>
+<div class="row">
+    <div class="col-md-3">
+
+            <i class="fab fa-twitter icon"></i>
+
+
+           <a href="{% url 'tweet:home' user.username%}"><div><i class="fas fa-home icon"></i>
+            <strong>Home</strong></div> </a>
+
+        <div>
+            <i class="far fa-bell icon"></i>
+            <a href="#"><strong>Notification</strong></a>
+        </div>
+        <div>
+            <i class="fas fa-hashtag icon" ></i>
+            <a href="#"><strong>Explore</strong></a>
+        </div>
+        <div>
+            <i class="far fa-envelope icon"></i>
+            <a href="#"><strong>Messages</strong></a>
+        </div>
+        <div>
+            <i class="far fa-bookmark icon"></i>
+            <a href="#"><strong>Bookmarks</strong></a>
+        </div>
+        <div>
+            <i class="fas fa-list-ul icon"></i>
+            <a href="#"><strong>List</strong></a>
+        </div>
+        <div>
+            {% if user.profile_pic%}
+            <i><img class="icon profile" src="{{user.profile_pic.url}}" alt=""></i>
+            <a href="#"><strong>profile</strong></a>
+            {% else%}
+            <a href="#"><i class="fas fa-user-alt icon"></i><strong>Profile</strong></a>
+            {%endif%}
+
+        </div>
+        <div >
+           <i class="fas fa-ellipsis-h icon more"></i>
+            <a href="#"><strong>More</strong></a>
+        </div>
+        <br>
+        <div>
+            <a href="#" class="btn btn-primary btn-lg" style="border-radius:30px; width:150px;">Tweet</a>
+        </div>
+    </div>
+    <hr>
+    <div class="col-md-6 md">
+        <div>
+            <a href="{%url 'tweet:home' user.username %}"><i class="fas fa-arrow-left" style="color:#96DBFF; padding:10px;"></i></a>
+            <strong>{{user.username}}</strong>
+            <div style="padding-left:10px">{{tweets_count}} Tweets</div>
+            <div style="height:350px;">
+                <div class="profile_image">
+                </div>
+                <div class="card-1">
+                    {%if user.profile_pic%}
+                    <img class="img-responsive" src="{{user.profile_pic.url}}" alt="pic">
+                    <a class="btn" href="#" >Edit Profile</a>
+                    {%else%}
+                   <div class="idiv"><i class="fas fa-user-alt"></i></div>
+                     <a class="btn" href="#" >Edit Profile</a>
+                    {%endif%}
+                </div>
+            </div>
+            <div>
+                <strong style="padding-left:5px; font-size:120%;">{{user.username}}</strong>
+                 <h6 style="font-size:120%; padding-left:5px">@{{user.username}}</h6>
+            </div>
+            <div>
+                <i class="fas fa-map-marker-alt"></i>{{user.country}},{{user.city }}  Born {{user.DOB}}
+            </div>
+            <div>
+                <i class="far fa-calendar-alt"></i>Joined {{user.joined}}
+            </div>
+            <br>
+            <div>
+                <a href="#" style="color:black;"><strong>{{following}} </strong>Following</a>
+                <a href="#" style="color:black;"><strong>{{followers}} </strong>Followers</a>
+            </div>
+            <br>
+            <div class="presentation carousel-indicator">
+                   <div> <a href="#"   data-target="#slides" data-slide-to='0'>Tweets</a></div>
+                   <div><a href="#" data-target="#slides" data-slide-to='1'>Tweets&replies</a></div>
+                   <div>  <a href="#"   data-target="#slides" data-slide-to='2'>Media</a></div>
+                   <div ><a href="#" data-target="#slides" data-slide-to='3'>Likes</a></div>
+          </div>
+            <hr>
+            <div id="slides" class="carousel" >
+                <div class="carousel-inner">
+                   <div class="carousel-item active">
+                   {%if tweets%}
+                       {%for tweet in tweets.text%}
+                       {{tweet}}
+                       {%endfor%}
+                    {%else%}
+                       <h3>You don't have any tweet yet</h3>
+                     {%endif%}
+                   </div>
+
+                    <div class="carousel-item "><h1>replies</h1></div>
+                    <div class="carousel-item "><h1>media</h1></div>
+                    <div class="carousel-item "><h1>likes</h1></div>
+                </div>
+            </div>
+            <script>
+            function likes(){
+              $('likes').css('border-bottom','2px solid rgba(29,161,242,1.00');
+                          }
+           </script>
+        <br>
+    </div>
+    </div>
+    <div class="col-md-3 ">
+        <h1>Trend for you</h1>
+    </div>
+</div>
+<script src="{% static 'script.js'%}"></script>
+</body>
+</html>
