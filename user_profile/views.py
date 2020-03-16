@@ -11,10 +11,10 @@ class Profile(View):
     def get(self, request, username):
         user = get_object_or_404(User, username=username)
         id = user.id
-        followers = Followers.objects.filter(pk=id).count()
-        following = Following.objects.filter(pk=id).count()
-        tweets_count = Tweet.objects.filter(pk=id).count()
-        tweets = Tweet.objects.filter(id=user.id)
+        followers = Followers.objects.filter(user=user).count()
+        following = Following.objects.filter(user=user).count()
+        tweets_count = Tweet.objects.filter(user=user).count()
+        tweets = Tweet.objects.filter(user=user)
         context = {
             'user': user,
             'followers': followers,

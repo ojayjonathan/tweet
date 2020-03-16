@@ -4,7 +4,9 @@ margin: 10px 0 0 10px;}
 margin:10px 10px 10px 10pk ;
 display:flex;
 justify-content:space-around;
+font-family:system-ui;
 }
+
 
 .col-md-3 a{
 color:black;}
@@ -55,6 +57,7 @@ border-left:2px solid #c1c1d1 ;
 border-right:2px solid #c1c1d1;
 overflow:scroll;
 padding:0 0 0 0;
+font-family:Roman, "Times New Roman", Times, serif;
 }
 
 .profile_image{
@@ -95,12 +98,14 @@ border-radius:30px
 .presentation {
 display:flex;
 justify-content:space-around;
-
+position:sticky;
+top:0;
 }
 .presentation a{
 color:black;
 height:30px;
 padding-bottom:3px;
+
 }
 
 .presentation a:hover{

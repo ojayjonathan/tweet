@@ -18,7 +18,7 @@
 
 <body>
 <div class="row">
-    <div class="col-md-3">
+    <div class="col-md-3" style="position:fixed;">
 
             <i class="fab fa-twitter icon"></i>
 
@@ -67,9 +67,11 @@
     <hr>
     <div class="col-md-6 md">
         <div>
+            <div style="position:sticky; top:0px;">
             <a href="{%url 'tweet:home' user.username %}"><i class="fas fa-arrow-left" style="color:#96DBFF; padding:10px;"></i></a>
             <strong>{{user.username}}</strong>
             <div style="padding-left:10px">{{tweets_count}} Tweets</div>
+            </div>
             <div style="height:350px;">
                 <div class="profile_image">
                 </div>
@@ -99,27 +101,69 @@
                 <a href="#" style="color:black;"><strong>{{followers}} </strong>Followers</a>
             </div>
             <br>
-            <div class="presentation carousel-indicator">
-                   <div> <a href="#"   data-target="#slides" data-slide-to='0'>Tweets</a></div>
+
+            <div class="presentation carousel-indicator" >
+                   <div> <a href="#"   data-target="#slides" data-slide-to='0' >Tweets</a></div>
                    <div><a href="#" data-target="#slides" data-slide-to='1'>Tweets&replies</a></div>
-                   <div>  <a href="#"   data-target="#slides" data-slide-to='2'>Media</a></div>
+                   <div id="top">  <a href="#"   data-target="#slides" data-slide-to='2'>Media</a></div>
                    <div ><a href="#" data-target="#slides" data-slide-to='3'>Likes</a></div>
+
           </div>
+
             <hr>
+            <!-- user tweets -->
             <div id="slides" class="carousel" >
                 <div class="carousel-inner">
                    <div class="carousel-item active">
                    {%if tweets%}
-                       {%for tweet in tweets.text%}
-                       {{tweet}}
+                       {%for tweet in tweets%}
+                       <br>
+                       <div class="row" style="margin-left:0px;">
+                           <div class="col-md-2">
+                               <div style="width:100%; height:30px; border-radius:50%; background-color:#767a7d;">
+
+                               </div>
+                           </div>
+                           <div id="tweet" class="col-md-10 card" style="border:none; width:100%; padding-right:none;">
+                               <p><span style="font-size:120%; font-weight:800; font-family:serif">{{tweet.user}}</span>
+                               <span class="card-subtitle" style="font-weight:500; color:#767a7d;">@{{tweet.user}}.{{ tweet.created_date}}</span>
+                                <div class="card-text">
+                                   <p> {{tweet.text}}</p>
+                                    {%if tweet.tweet_file%}
+                                       <div style="border-left:2px solid #dee3e8; padding-left:20px;">
+                                    <img src="{{tweet.tweet_file.url}}" alt="media" width="100%" height="250px" style="border-radius:10px;">
+                                   </div>
+                                    {%endif%}
+                               </div>
+                           </div>
+
+                       </div>
+
                        {%endfor%}
                     {%else%}
                        <h3>You don't have any tweet yet</h3>
                      {%endif%}
                    </div>
-
+                <!-- tweets and replies -->
                     <div class="carousel-item "><h1>replies</h1></div>
-                    <div class="carousel-item "><h1>media</h1></div>
+                <!-- user media -->
+                    <div class="carousel-item ">
+                {%if  tweets%}
+                 {%for tweet in tweets%}
+                    {%if tweet.tweet_file%}
+                        <a href="#top" target="_self"><span style="color:#767a7d; font-weight:500; padding-left:20px; ">{{tweet.created_date}}</span></a>
+                <div style="display:flex; justify-content:space-around;">
+                    <img src="{{tweet.tweet_file.url}}" alt="media" height="200px" width="350px" style="border-radius:10px">
+                    <br>
+                </div>
+                   {%endif%}
+                  {%endfor%}
+                {%else%}
+                    <h3 style="font-weight:900">You haven’t Tweeted any photos or videos yet</h3>
+                        <h4 style="color:#767a7d">When you send Tweets with photos or videos in them, it will show up here.</h4>
+                {%endif%}
+                    </div>
+                <!-- user likes -->
                     <div class="carousel-item "><h1>likes</h1></div>
                 </div>
             </div>
@@ -132,9 +176,9 @@
     </div>
     </div>
     <div class="col-md-3 ">
-        <h1>Trend for you</h1>
+        <h1 style="position:sticky; top:0px; ">Trend for you</h1>
     </div>
-</div>
+
 <script src="{% static 'script.js'%}"></script>
 </body>
 </html>

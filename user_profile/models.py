@@ -19,18 +19,22 @@ class User (AbstractBaseUser):
         return self.username
 
 
-class Followers(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    followers = models.ManyToManyField(User, related_name='follower')
-
-    def __str__(self):
-        return self.followers
-
-
 class Following(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    following = models.ManyToManyField(User, related_name='follow')
+    following = models.ManyToManyField(User, related_name='follow_me')
 
     def __str__(self):
         return self.following
+
+
+class Followers(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    follower = models.ManyToManyField(User, related_name='follower')
+
+    def __str__(self):
+        return self.follower
+
+
+
+
 
