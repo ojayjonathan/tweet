@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
+from imagekit.models import ImageSpecField
+from imagekit.processors import ResizeToFill
 
 
 class User (AbstractBaseUser):
@@ -7,7 +9,9 @@ class User (AbstractBaseUser):
     email = models.EmailField('email address', unique=True)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
-    profile_pic = models.ImageField(blank=True, null=True)
+    profile_pic = models.ImageField(blank=True, default='user.png', upload_to='images')
+    thumbnail = ImageSpecField(source='profile_pic', processors=[ResizeToFill(200, 200)], format="jpeg",
+                               options={'quality': 60})
     DOB = models.DateField(null=True)
     country = models.CharField(max_length=30, null=True, blank=True)
     city = models.CharField(max_length=50, null=True, blank=True)
@@ -19,20 +23,20 @@ class User (AbstractBaseUser):
         return self.username
 
 
-class Following(models.Model):
+class FollowingUser(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    following = models.ManyToManyField(User, related_name='follow_me')
+    following = models.ForeignKey(User, on_delete=models.CASCADE, related_name="follow_you")
 
     def __str__(self):
         return self.following
 
 
-class Followers(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    follower = models.ManyToManyField(User, related_name='follower')
+class FollowersUser(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="follow_me")
+    follower = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.follower
+        return self.user
 
 
 

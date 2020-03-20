@@ -1,3 +1,31 @@
+.hidden{
+position:fixed;
+top:0px;
+left:0px;
+width:100%;
+height:100%;
+display:none;
+z-index:9;
+background-color:rgba(0,0, 0,0.5);
+}
+.form{
+position:fixed;
+top:100px;
+left:400px;
+z-index:20;
+background-color:rgba(255,255,255,1);
+border-radius:10px;
+box-shadow:0px 4px 8px 0 rgba(0,0,0,0.8);
+padding:5px 5px 5px 15px;
+}
+.side div:hover{
+border:1px solid #D7EFFF;
+border-radius:30px;
+color:rgb(133, 234, 252) !important;
+background-color:#E6FFFA;
+opacity:1;
+width:150px;
+}
 .row{
 margin: 10px 0 0 10px;}
 .menu div {
@@ -14,15 +42,11 @@ color:black;}
 
 }
 
+.tweet:hover{
+background-color:#f5f8fa;}
 
-.col-md-3 div:hover{
-border:1px solid #D7EFFF;
-border-radius:30px;
-color:rgb(133, 234, 252) !important;
-background-color:#E6FFFA;
-opacity:1;
-width:150px;
-}
+
+
 
 .col-md-3 div a:hover{
 text-decoration:none;
@@ -41,6 +65,8 @@ color:rgba(29,161,242,1.00);
 padding-top:10px;
 font-size:48px;
 }
+
+
 .more{
 border:2px solid rgb(77, 75, 75);
 border-radius:80%;
@@ -61,7 +87,7 @@ font-family:Roman, "Times New Roman", Times, serif;
 }
 
 .profile_image{
-background-color:rgb(193, 193, 209);
+background-color:rgb(204, 214, 221)jpg;
 height:200px;
 width :100%
 }
@@ -112,4 +138,17 @@ padding-bottom:3px;
 border-bottom:2px solid rgba(29,161,242,1.00);
 color:#96DBFF;
 text-decoration:none;
+}
+.col-md-3 .mr-sm-2 {
+background-color:rgb(230, 236, 240);}
+
+.hidden .form .file .btn-sub{
+border-radius:5px;
+position:relative;
+bottom:10px;
+right:10px;
+background-color:#9ed1f8;
+}
+form .form-group textarea {
+border:none;
 }

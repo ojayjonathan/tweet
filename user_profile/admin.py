@@ -1,7 +1,6 @@
 from django.contrib import admin
-from .models import User, Followers, Following
+from .models import User, FollowersUser
 
 admin.site.register(User)
-admin.site.register(Following)
-admin.site.register(Followers)
+admin.site.register(FollowersUser)
 

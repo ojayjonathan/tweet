@@ -11,14 +11,14 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-
-       <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+        <script src="{% static 'home.js'%}"></script>
+       <link rel="stylesheet" type="text/css" href="{% static 'home.css' %}">
     </head>
 
 
 <body>
 <div class="row">
-    <div class="col-md-3">
+    <div class="col-md-3 side" style="position:fixed;">
 
             <i class="fab fa-twitter icon"></i>
 
@@ -48,12 +48,8 @@
         </div>
         <a href="{% url 'user_profile:profile' user.username%} ">
         <div>
-            {% if user.profile_pic%}
-            <i><img class="icon profile" src="{{user.profile_pic.url}}" alt=""></i>
+            <i><img class="icon profile" src="{{user.thumbnail.url}}" alt=""></i>
             <strong>profile</strong>
-            {% else%}
-            <i class="fas fa-user-alt icon"></i><strong>Profile</strong>
-            {%endif%}
 
         </div>
             </a>
@@ -63,29 +59,111 @@
         </div>
         <br>
         <div>
-            <a href="#" class="btn btn-primary btn-lg" style="border-radius:30px; width:150px;">Tweet</a>
+            <button class="btn btn-primary btn-lg" style="border-radius:30px; width:150px;" onclick="openTweet()">Tweet</button>
         </div>
     </div>
     <hr>
-    <div class="col-md-6 md">
-        {%block content%}
-        {%endblock%}
+    <!-- home body -->
+    <div class="col-md-6 md" style="height:100%">
+        <br>
+        <h4 style="font-weight:800; font-family:Monospace; padding-left:10px;" >Home</h4>
+        <hr>
+        <!--user send tweet -->
+
+         <form action="{%url 'tweet:post' user.username %}" enctype="multipart/form-data" method="post">
+        {%csrf_token%}
+             <div style="text-danger">{{tweet_ers}}</div>
+           <div class="form-group">
+              <img class="icon profile" src="{{user.thumbnail.url}}" alt="">
+
+              <textarea  name="text"  cols="40" rows="3" placeholder="What's happening?" required style="float:right; padding-bottom:10px;"></textarea>
+              <br>
+              <br>
+              <div class="file">
+                  <input name="tweet_file" type="file" >
+                  <button class="btn-sub" value="post" type="submit" style="border-radius:5px ;position:absolute;  right:10px; color:white; background-color:#9ed1f8;" >Tweet</button>
+             </div>
+
+           </div>
+         </form>
+
+        <!-- user tweet feeds -->
+        <div style="background-color:rgba(230, 236, 240,1); height:10px"> </div>
+        <div class="row" style="margin-left:0px; " >
+
+
+        {%if tweets%}
+                       {%for tweet in tweets%}
+                           <div class="col-md-2">
+                               <div class="icon">
+                                   <img class="icon profile" src="{{tweet.user.thumbnail.url}}" alt="">
+                               </div>
+                           </div>
+                           <div id="tweet" class="col-md-10 card" style="border:none; width:100%; padding-right:none;">
+                               <p><span style="font-size:120%; font-weight:800; font-family:serif">{{tweet.user}}</span>
+                               <span class="card-subtitle" style="font-weight:500; color:#767a7d;">@{{tweet.user}}.{{ tweet.created_date}}</span>
+                                   <p class="card-text"> {{tweet.text}}</p>
+                                    {%if tweet.tweet_file%}
+                                       <div style="border-left:2px solid #dee3e8; padding-left:20px;">
+                                    <img src="{{tweet.tweet_file.url}}" alt="media" width="100%" height="250px" style="border-radius:10px;">
+                                   </div>
+                                   {%endif%}
+                           </div>
+
+                  {%endfor%}
+        {%else%}
+         <h3>You don't have any tweet yet</h3>
+        {%endif%}
+     </div>
+        <br>
+        <br>
     </div>
+    <!-- col-md-3 -->
+
     <div class="col-md-3 ">
-        <h1>Trend for you</h1>
+        <nav>
+            <form action="" method="get" class="form-inline mt-2 mt-md-0">
+                <input id="q" type="text" name="q" value="{{request.GET.q}}" class="form-control mr-sm-2" placeholder="Search" aria-label="search">
+            </form>
+        </nav>
+        <div style="max-height:500px; overflow-y:scroll; z-index:20; padding:0 0 2px 5px">
+        <div style="margin:5px 5px 0 0; box-shadow:0px 4px 8px 0 rgba(0,0,0,0.8);">
+            {%if tweet_result%}
+             {%for result in tweet_result%}
+             <h4 style="font-weight:800">{{result.user.username}}</h4>
+             <p style="">{{result.text}}</p>
+             <hr>
+              {%endfor%}
+            {%endif%}
+        </div>
+
+        <div class="" style="margin:5px 5px 0 0; box-shadow:0px 4px 8px 0 rgba(0,0,0,0.8);">
+            {%if user_result%}
+            {%for user in user_result%}
+            {% if user.profile_pic%}
+            <i><img class="icon profile" src="{{user.profile_pic.url}}" alt=""></i>
+             {%endif%}
+            <a href="{%url 'user_profile:profile' user.username%}" class="card-link"><span class="link">{{user.username}}</span></a>
+            <span>@{{user.username}}</span>
+
+
+            {%endfor%}
+            {%endif%}
+        </div>
+        </div>
     </div>
-</div>
-<div class="hidden">
+
+
+<div class="hidden" id="hidden" style="display:none;">
     <div class="form">
-    <button style="width:100%; background-color:white; color:#9ed1f8; text-align:left;border:none;">X</button>
+    <button style="width:100%; background-color:white; color:#9ed1f8; text-align:left;border:none;" onclick="closeForm()">X</button>
     <hr>
     <form action="{%url 'tweet:post' user.username %}" enctype="multipart/form-data" method="post">
         {%csrf_token%}
-        <div class="form-group">
-    <span class="glyphicon glypicon-user"></span>
-    <span class="glyphicon glyphicon-print"></span>
+        <div class="form-group" style="width:500px;">
+            <img class="profile icon" src="{{user.thumbnail.url}}" alt="" style="float:left;">
     <label>{{form.text}}</label>
-    <textarea  name="text" id="" cols="20" rows="5" placeholder="What's happening"></textarea>
+    <textarea  name="text" id="" cols="20" rows="5" placeholder="What's happening?" required></textarea>
     <br>
     <br>
     <div class="file">
@@ -98,6 +176,7 @@
     </form>
 </div>
 </div>
-<script src="{% static 'script.js'%}"></script>
+
+</div>
 </body>
 </html>

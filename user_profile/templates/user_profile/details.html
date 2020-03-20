@@ -12,13 +12,14 @@
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 
 
-       <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+       <link rel="stylesheet" type="text/css" href="{% static 'detail.css' %}">
+       <script  src="{% static 'detail.js' %}"></script>
     </head>
 
 
 <body>
 <div class="row">
-    <div class="col-md-3" style="position:fixed;">
+    <div class="col-md-3 side" style="position:fixed;">
 
             <i class="fab fa-twitter icon"></i>
 
@@ -47,12 +48,8 @@
             <a href="#"><strong>List</strong></a>
         </div>
         <div>
-            {% if user.profile_pic%}
-            <i><img class="icon profile" src="{{user.profile_pic.url}}" alt=""></i>
+            <i><img class="icon profile" src="{{user.thumbnail.url}}" alt=""></i>
             <a href="#"><strong>profile</strong></a>
-            {% else%}
-            <a href="#"><i class="fas fa-user-alt icon"></i><strong>Profile</strong></a>
-            {%endif%}
 
         </div>
         <div >
@@ -61,7 +58,7 @@
         </div>
         <br>
         <div>
-            <a href="#" class="btn btn-primary btn-lg" style="border-radius:30px; width:150px;">Tweet</a>
+            <a href="#" class="btn btn-primary btn-lg" style="border-radius:30px; width:150px;" onclick="openTweet()">Tweet</a>
         </div>
     </div>
     <hr>
@@ -76,13 +73,8 @@
                 <div class="profile_image">
                 </div>
                 <div class="card-1">
-                    {%if user.profile_pic%}
-                    <img class="img-responsive" src="{{user.profile_pic.url}}" alt="pic">
+                    <img class="img-responsive" src="{{user.thumbnail.url}}" alt="pic">
                     <a class="btn" href="#" >Edit Profile</a>
-                    {%else%}
-                   <div class="idiv"><i class="fas fa-user-alt"></i></div>
-                     <a class="btn" href="#" >Edit Profile</a>
-                    {%endif%}
                 </div>
             </div>
             <div>
@@ -98,7 +90,8 @@
             <br>
             <div>
                 <a href="#" style="color:black;"><strong>{{following}} </strong>Following</a>
-                <a href="#" style="color:black;"><strong>{{followers}} </strong>Followers</a>
+                <a href="#" style="color:black;"><strong>{{follower_count}} </strong>Followers</a>
+
             </div>
             <br>
 
@@ -120,18 +113,16 @@
                        <br>
                        <div class="row" style="margin-left:0px;">
                            <div class="col-md-2">
-                               <div style="width:100%; height:30px; border-radius:50%; background-color:#767a7d;">
-
-                               </div>
+                               <img class="profile icon" src="{{tweet.user.thumbnail.url}}" alt="">
                            </div>
-                           <div id="tweet" class="col-md-10 card" style="border:none; width:100%; padding-right:none;">
+                           <div id="tweet" class="col-md-10 card tweet" style="border:none; width:100%; padding-right:none;">
                                <p><span style="font-size:120%; font-weight:800; font-family:serif">{{tweet.user}}</span>
                                <span class="card-subtitle" style="font-weight:500; color:#767a7d;">@{{tweet.user}}.{{ tweet.created_date}}</span>
                                 <div class="card-text">
                                    <p> {{tweet.text}}</p>
                                     {%if tweet.tweet_file%}
                                        <div style="border-left:2px solid #dee3e8; padding-left:20px;">
-                                    <img src="{{tweet.tweet_file.url}}" alt="media" width="100%" height="250px" style="border-radius:10px;">
+                                    <img  src="{{tweet.tweet_file.url}}" alt="media" width="100%" height="250px" style="border-radius:10px;">
                                    </div>
                                     {%endif%}
                                </div>
@@ -176,9 +167,59 @@
     </div>
     </div>
     <div class="col-md-3 ">
-        <h1 style="position:sticky; top:0px; ">Trend for you</h1>
+        <nav>
+            <form action="" method="get" class="form-inline mt-2 mt-md-0">
+                <input id="q" type="text" name="q" value="{{request.GET.q}}" class="form-control mr-sm-2" placeholder="Search" aria-label="search">
+            </form>
+        </nav>
+        <div style="max-height:500px; overflow-y:scroll; z-index:20; padding:0 0 2px 5px">
+        <div style="margin:5px 5px 0 0; box-shadow:0px 4px 8px 0 rgba(0,0,0,0.8);">
+            {%if tweet_result%}
+             {%for result in tweet_result%}
+             <h4 style="font-weight:800">{{result.user.username}}</h4>
+             <p style="">{{result.text}}</p>
+             <hr>
+              {%endfor%}
+            {%endif%}
+        </div>
+
+        <div class="" style="margin:5px 5px 0 0; box-shadow:0px 4px 8px 0 rgba(0,0,0,0.8);">
+            {%if user_result%}
+            {%for user in user_result%}
+            <i><img class="icon profile" src="{{user.thumbnail.url}}" alt=""></i>
+            <a href="{%url 'user_profile:profile' user.username%}"><span class="link">{{user.username}}</span></a>
+            <span>@{{user.username}}</span>
+
+            
+            {%endfor%}
+            {%endif%}
+        </div>
+        </div>
     </div>
 
 <script src="{% static 'script.js'%}"></script>
+<div class="hidden" id="hidden" style="display:none;">
+    <div class="form">
+    <button style="width:100%; background-color:white; color:#9ed1f8; text-align:left;border:none;" onclick="closeForm()">X</button>
+    <hr>
+    <form action="{%url 'tweet:post' user.username %}" enctype="multipart/form-data" method="post">
+        {%csrf_token%}
+        <div class="form-group">
+            <img class="profile icon" src="{{user.thumbnail.url}}" alt="" style="float:left;">
+    <label>{{form.text}}</label>
+    <textarea  name="text" id="" cols="20" rows="5" placeholder="What's happening" required></textarea>
+    <br>
+    <br>
+    <div class="file">
+        <input type="file" name="tweet_file" placeholder="upload file">
+        <button class="btn-sub" value="post" type="submit" style="border-radius:30px ;position:absolute; bottom:10px; right:10px; color:white; background-color:#9ed1f8;" >Tweet</button>
+    </div>
+
+</div>
+
+    </form>
+</div>
+</div>
+
 </body>
 </html>

@@ -24,7 +24,9 @@ from tweets import url
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('user/', include(user_urls)),
-    path('home/', include(url))
+    path('home/', include(url)),
+    path('accounts/', include('allauth.urls')),
+
 ]
 
 if settings.DEBUG:

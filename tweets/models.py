@@ -16,8 +16,7 @@ class Tweet(models.Model):
 class Hashtag (models.Model):
     name = models.CharField(max_length=60, unique=True)
     tweet = models.ManyToManyField(Tweet)
+    hashtag_count = models.IntegerField(default=1)
 
     def __str__(self):
         return self.name
-
-
