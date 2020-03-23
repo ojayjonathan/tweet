@@ -1,15 +1,17 @@
 from django.views.generic import View
 from .admin import User
 from django.shortcuts import render
-from .models import FollowersUser
+from .models import FollowersUser, User
 from tweets.models import Tweet
 from django.shortcuts import get_object_or_404
-from tweets.forms import SearchForm
+from tweets.forms import SearchForm, LoginForm
+from django.contrib.auth import login, logout, authenticate
+from django.http import HttpResponseRedirect
 
 
 class Profile(View):
-
-    def get(self, request, username):
+    @staticmethod
+    def get(request, username):
         user = get_object_or_404(User, username=username)
         followers_count = FollowersUser.objects.filter(user=user).count()
         followers = FollowersUser.objects.filter(user=user)
@@ -42,7 +44,35 @@ class Profile(View):
         return render(request, 'user_profile/details.html', context)
 
 
+class Login(View):
+    context = {}
 
+    @staticmethod
+    def get(request):
+        return render(request, 'user_profile/login.html', context={})
+
+    @staticmethod
+    def post(request):
+        form = LoginForm(request.POST)
+        if form.is_valid:
+            username = form['username']
+            password = form['password']
+            #user = authenticate(request, username=username, password=password)
+            user = User.objects.filter(username=username)
+            if user:
+                login(request, password=password, username=username)
+            else:
+                msg = 'Invalid login Details'
+                context = {
+                    'form': form,
+                     'msg': msg
+                }
+                return render(request, 'user_profile/login.html', context)
+            return HttpResponseRedirect('/home/'+user.username)
+
+
+class Logout(View):
+    pass
 
 
 

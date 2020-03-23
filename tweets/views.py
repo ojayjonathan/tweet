@@ -7,6 +7,7 @@ from .forms import TweetForm, SearchForm
 
 from django.http import HttpResponseRedirect
 from tweets.models import Tweet
+import subprocess
 
 
 class HomeView(View):
@@ -40,8 +41,10 @@ class TweetView(View):
         if form.is_valid():
             user = User.objects.get(username=username)
             text = form.cleaned_data['text']
+
+            image = form.cleaned_data['image']
             tweet_file = form.cleaned_data['tweet_file']
-            tweet = Tweet(text=text, user=user, tweet_file=tweet_file)
+            tweet = Tweet(text=text, user=user, tweet_file=tweet_file, image=image)
             tweet.save()
             words = text.split()
             for word in words:

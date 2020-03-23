@@ -7,9 +7,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-        <script src="https://kit.fontawesome.com/e785fe72b2.js" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css" integrity="sha384-v8BU367qNbs/aIZIxuivaU55N5GPF89WBerHoGA4QTcbUjYiLQtKdrfXnqAcXyTv" crossorigin="anonymous">
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+         <link href="https://vjs.zencdn.net/7.6.6/video-js.css" rel="stylesheet" />
 
 
        <link rel="stylesheet" type="text/css" href="{% static 'detail.css' %}">
@@ -120,9 +121,9 @@
                                <span class="card-subtitle" style="font-weight:500; color:#767a7d;">@{{tweet.user}}.{{ tweet.created_date}}</span>
                                 <div class="card-text">
                                    <p> {{tweet.text}}</p>
-                                    {%if tweet.tweet_file%}
+                                    {%if tweet.image%}
                                        <div style="border-left:2px solid #dee3e8; padding-left:20px;">
-                                    <img  src="{{tweet.tweet_file.url}}" alt="media" width="100%" height="250px" style="border-radius:10px;">
+                                    <img  src="{{tweet.image_thumbnail.url}}" alt="media" width="100%" height="250px" style="border-radius:10px;">
                                    </div>
                                     {%endif%}
                                </div>
@@ -141,10 +142,10 @@
                     <div class="carousel-item ">
                 {%if  tweets%}
                  {%for tweet in tweets%}
-                    {%if tweet.tweet_file%}
+                    {%if tweet.image%}
                         <a href="#top" target="_self"><span style="color:#767a7d; font-weight:500; padding-left:20px; ">{{tweet.created_date}}</span></a>
                 <div style="display:flex; justify-content:space-around;">
-                    <img src="{{tweet.tweet_file.url}}" alt="media" height="200px" width="350px" style="border-radius:10px">
+                    <img src="{{tweet.image_thumbnail.url}}" alt="media" height="200px" width="350px" style="border-radius:10px">
                     <br>
                 </div>
                    {%endif%}
@@ -158,18 +159,14 @@
                     <div class="carousel-item "><h1>likes</h1></div>
                 </div>
             </div>
-            <script>
-            function likes(){
-              $('likes').css('border-bottom','2px solid rgba(29,161,242,1.00');
-                          }
-           </script>
+
         <br>
     </div>
     </div>
     <div class="col-md-3 ">
         <nav>
             <form action="" method="get" class="form-inline mt-2 mt-md-0">
-                <input id="q" type="text" name="q" value="{{request.GET.q}}" class="form-control mr-sm-2" placeholder="Search" aria-label="search">
+                <input id="q" type="text" name="q" value="{{request.GET.q}}" class="form-control mr-sm-2 " placeholder="search" aria-label="search">
             </form>
         </nav>
         <div style="max-height:500px; overflow-y:scroll; z-index:20; padding:0 0 2px 5px">
@@ -197,21 +194,26 @@
         </div>
     </div>
 
-<script src="{% static 'script.js'%}"></script>
+
 <div class="hidden" id="hidden" style="display:none;">
     <div class="form">
     <button style="width:100%; background-color:white; color:#9ed1f8; text-align:left;border:none;" onclick="closeForm()">X</button>
     <hr>
     <form action="{%url 'tweet:post' user.username %}" enctype="multipart/form-data" method="post">
         {%csrf_token%}
-        <div class="form-group">
+        <div class="form-group" style="width:500px;">
             <img class="profile icon" src="{{user.thumbnail.url}}" alt="" style="float:left;">
     <label>{{form.text}}</label>
     <textarea  name="text" id="" cols="20" rows="5" placeholder="What's happening" required></textarea>
     <br>
     <br>
     <div class="file">
-        <input type="file" name="tweet_file" placeholder="upload file">
+        <input id="image" type="file" name="image" accept="image/*"  style="display:none">
+        <input id="video" type="file" accept="video/*" name="tweet_file"  style="display:none">
+        <div style="font-size:2rem;">
+            <a href="#"><i id="videoupload" class="fas fa-video" style="color:#4f5558"></i></a>
+            <a href="#"><i id="imageupload" class="far fa-images" style="color:#4f5558"></i></a>
+        </div>
         <button class="btn-sub" value="post" type="submit" style="border-radius:30px ;position:absolute; bottom:10px; right:10px; color:white; background-color:#9ed1f8;" >Tweet</button>
     </div>
 
@@ -220,6 +222,24 @@
     </form>
 </div>
 </div>
+    <script>
+         const imageupload = document.getElementById('imageupload'),
+         image=document.getElementById('image');
+         imageupload.addEventListener("click", function(e){
+             if (image) {
+                 image.click();
+             }
+         }, false);
+         const videoupload = document.getElementById('videoupload'),
+         video=document.getElementById('video');
+         videoupload.addEventListener("click", function(e){
+             if (video) {
+                 video.click();
+             }
+         }, false);
 
+
+     </script>
+  <script src="https://vjs.zencdn.net/7.6.6/video.js"></script>
 </body>
 </html>

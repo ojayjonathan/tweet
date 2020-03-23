@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LOGIN</title>
+</head>
+<body>
+<form action="{% url 'user_profile:login' %}" method="post">
+    {%csrf_token%}
+   <div style="font-size:1.2em; position:fixed; top:30%; left:30%; display:block; justify-content:space-around">
+       {{msg}}
+       {{form.username.errors}}
+       <br>
+       <label for="username">Username</label>
+       <input name="username" id="username" type="text" required>
+       <br>
+       <br>
+       {{form.password.errors}}
+       <label for="password">Password</label>
+       <input name="password" type="password" required id="password">
+       <br>
+       <br>
+       <button type="submit" style="float:right;">Login</button>
+   </div>
+    </form>
+</body>
+</html>
